@@ -65,23 +65,23 @@
 
 (defmacro play (app &body body)
   (let ((gapp (gensym)))
-    `(let ((gapp ,app))
+    `(let ((,gapp ,app))
        (unwind-protect
 	    (setf %gl:*gl-get-proc-address* #'glfw:get-proc-address)
-	 (format t "~A~%" gapp)
-	 (loop while (not (closep gapp))
+	 (format t "~A~%" ,gapp)
+	 (loop while (not (closep ,gapp))
             do (progn
                  (gl:clear :color-buffer-bit)
                  (multiple-value-bind (x y)
-                     (glfw:get-cursor-position (ref-window gapp))
-                   (setf (ref-mouse-x gapp) x
-                         (ref-mouse-y gapp) y))
+                     (glfw:get-cursor-position (ref-window ,gapp))
+                   (setf (ref-mouse-x ,gapp) x
+                         (ref-mouse-y ,gapp) y))
                  ,@body)
-	      (glfw:swap-buffers (ref-window gapp))
+	      (glfw:swap-buffers (ref-window ,gapp))
 	      (glfw:poll-events))
 	 (format t "end~%"))
        
-       (glfw:destroy-window (ref-window gapp)))))
+       (glfw:destroy-window (ref-window ,gapp)))))
 
 (defun create-program (vsource fsource)
   (let ((program (gl:create-program))
